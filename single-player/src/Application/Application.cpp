@@ -4,6 +4,7 @@ App::App(int width, int height, sf::String title)
 {
 	// Create render window.
 	window.create(sf::VideoMode(width, height), title);
+	window.setFramerateLimit(30);
 
 	// Init timer variables.
 	previousUpdate = elapsedTime = frameDelta = 0;
@@ -14,31 +15,33 @@ App::App(int width, int height, sf::String title)
 
 	while (window.isOpen())
 	{
-		// Process windows events (move, resize, close).
 		processEvents();
-		// Process user inputs.
 		processInput();
 
 		// Calculate time variables.
 		frameDelta = clock.getElapsedTime().asMilliseconds();
 		clock.restart();
 		elapsedTime = elapsedTime + frameDelta;
-		// If we are due a game tick,
-		if (elapsedTime - previousUpdate >= (1000 / (double)tickRate))
+		// If we are due a game tick:
+		if ((elapsedTime - previousUpdate) >= (1000 / (double)tickRate))
 		{
-			this->fixedUpdate();
+			fixedUpdate();
 			previousUpdate = elapsedTime;
 		}
-		this->update();
+		update();
 	}
 }
 
 void App::update()
 {
+	window.clear();
+
+	window.display();
 }
 
 void App::fixedUpdate()
 {
+	std::cout << elapsedTime << std::endl;
 }
 
 void App::processEvents()
