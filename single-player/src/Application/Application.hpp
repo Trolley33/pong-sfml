@@ -10,6 +10,13 @@ struct Ball
   sf::CircleShape circleShape;
   sf::Vector2f vel;
 };
+
+struct Player
+{
+  sf::RectangleShape rectShape;
+  int verticalVel;
+};
+
 class App
 {
 private:
@@ -17,8 +24,9 @@ private:
 
   float frameDelta;
 
-  sf::RectangleShape player1;
-  sf::RectangleShape player2;
+  Player player1;
+  Player player2;
+
   Ball ball;
 
 public:

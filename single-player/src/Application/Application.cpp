@@ -7,14 +7,14 @@ App::App(int width, int height, sf::String title)
   window.setFramerateLimit(30);
 
   // Create Players
-  player1.setPosition(sf::Vector2f(10, 10));              // create at top left
-  player2.setPosition(sf::Vector2f(width - 10 - 20, 10)); // create at top right
+  player1.rectShape = sf::RectangleShape(sf::Vector2f(20, 60));
+  player2.rectShape = sf::RectangleShape(sf::Vector2f(20, 60));
 
-  player1.setSize(sf::Vector2f(20, 60));
-  player2.setSize(sf::Vector2f(20, 60));
+  player1.rectShape.setPosition(sf::Vector2f(10, 10));              // create at top left
+  player2.rectShape.setPosition(sf::Vector2f(width - 10 - 20, 10)); // create at top right
 
-  player1.setFillColor(sf::Color::White);
-  player2.setFillColor(sf::Color::White);
+  player1.rectShape.setFillColor(sf::Color::White);
+  player2.rectShape.setFillColor(sf::Color::White);
 
   // Create ball
   ball.circleShape = sf::CircleShape(15.0f); // initial radius
@@ -42,8 +42,9 @@ void App::render()
 {
   window.clear();
 
-  window.draw(player1);
-  window.draw(player2);
+  window.draw(player1.rectShape);
+  window.draw(player2.rectShape);
+
   window.draw(ball.circleShape);
 
   window.display();
