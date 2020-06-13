@@ -18,11 +18,11 @@ private:
 public:
 	App(int width, int height, sf::String title);
 
-	void update();
-	void fixedUpdate();
-
 	void processEvents();
 	void processInput();
+	void render();
+
+	void fixedUpdate();
 };
 
 #endif // __APPLICATION_H__

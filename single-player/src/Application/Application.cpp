@@ -28,11 +28,11 @@ App::App(int width, int height, sf::String title)
 			fixedUpdate();
 			previousUpdate = elapsedTime;
 		}
-		update();
+		render();
 	}
 }
 
-void App::update()
+void App::render()
 {
 	window.clear();
 
