@@ -5,6 +5,11 @@
 #include "SFML/Main.hpp"
 #include "SFML/System.hpp"
 
+struct Ball
+{
+  sf::CircleShape circleShape;
+  sf::Vector2f vel;
+};
 class App
 {
 private:
@@ -14,6 +19,7 @@ private:
 
   sf::RectangleShape player1;
   sf::RectangleShape player2;
+  Ball ball;
 
 public:
   App(int width, int height, sf::String title);

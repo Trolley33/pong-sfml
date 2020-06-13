@@ -16,6 +16,13 @@ App::App(int width, int height, sf::String title)
   player1.setFillColor(sf::Color::White);
   player2.setFillColor(sf::Color::White);
 
+  // Create ball
+  ball.circleShape = sf::CircleShape(15.0f); // initial radius
+  ball.circleShape.setFillColor(sf::Color::White);
+  ball.circleShape.setOrigin(sf::Vector2f(ball.circleShape.getRadius(), ball.circleShape.getRadius()));
+  ball.circleShape.setPosition(sf::Vector2f(width / 2, height / 2));
+  ball.vel = sf::Vector2f(1, 0);
+
   // Init timer variables.
   frameDelta = 0;
 
@@ -37,6 +44,7 @@ void App::render()
 
   window.draw(player1);
   window.draw(player2);
+  window.draw(ball.circleShape);
 
   window.display();
 }
