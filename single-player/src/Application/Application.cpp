@@ -6,28 +6,27 @@ App::App(int width, int height, sf::String title)
   window.create(sf::VideoMode(width, height), title);
   window.setFramerateLimit(30);
 
-  // Init timer variables.
-  previousUpdate = elapsedTime = frameDelta = 0;
-  sf::Clock clock;
+  // Create Players
+  player1.setPosition(sf::Vector2f(10, 10));              // create at top left
+  player2.setPosition(sf::Vector2f(width - 10 - 20, 10)); // create at top right
 
-  // Number of game ticks per second.
-  const int tickRate = 30;
+  player1.setSize(sf::Vector2f(20, 60));
+  player2.setSize(sf::Vector2f(20, 60));
+
+  player1.setFillColor(sf::Color::White);
+  player2.setFillColor(sf::Color::White);
+
+  // Init timer variables.
+  frameDelta = 0;
+
+  sf::Clock clock;
 
   while (window.isOpen())
   {
     processEvents();
     processInput();
 
-    // Calculate time variables.
-    frameDelta = clock.getElapsedTime().asMilliseconds();
-    clock.restart();
-    elapsedTime = elapsedTime + frameDelta;
-    // If we are due a game tick:
-    if ((elapsedTime - previousUpdate) >= (1000 / (double)tickRate))
-    {
-      fixedUpdate();
-      previousUpdate = elapsedTime;
-    }
+    frameDelta = clock.restart().asSeconds();
     render();
   }
 }
@@ -36,12 +35,10 @@ void App::render()
 {
   window.clear();
 
-  window.display();
-}
+  window.draw(player1);
+  window.draw(player2);
 
-void App::fixedUpdate()
-{
-  std::cout << elapsedTime << std::endl;
+  window.display();
 }
 
 void App::processEvents()
@@ -58,4 +55,22 @@ void App::processEvents()
 
 void App::processInput()
 {
+  const int pixelsPerSeconds = 150;
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
+  {
+    player1.move(0, frameDelta * pixelsPerSeconds);
+  }
+  else if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
+  {
+    player1.move(0, frameDelta * -pixelsPerSeconds);
+  }
+
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+  {
+    player2.move(0, frameDelta * pixelsPerSeconds);
+  }
+  else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+  {
+    player2.move(0, frameDelta * -pixelsPerSeconds);
+  }
 }

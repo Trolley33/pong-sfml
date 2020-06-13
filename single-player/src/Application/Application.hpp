@@ -10,10 +10,10 @@ class App
 private:
   sf::RenderWindow window;
 
-  sf::Int64 previousUpdate;
-  sf::Int64 elapsedTime;
+  float frameDelta;
 
-  sf::Int32 frameDelta;
+  sf::RectangleShape player1;
+  sf::RectangleShape player2;
 
 public:
   App(int width, int height, sf::String title);
@@ -21,8 +21,6 @@ public:
   void processEvents();
   void processInput();
   void render();
-
-  void fixedUpdate();
 };
 
 #endif // __APPLICATION_H__
