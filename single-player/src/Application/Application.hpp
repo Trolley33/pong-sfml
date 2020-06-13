@@ -8,21 +8,21 @@
 class App
 {
 private:
-	sf::RenderWindow window;
+  sf::RenderWindow window;
 
-	sf::Int64 previousUpdate;
-	sf::Int64 elapsedTime;
+  sf::Int64 previousUpdate;
+  sf::Int64 elapsedTime;
 
-	sf::Int32 frameDelta;
+  sf::Int32 frameDelta;
 
 public:
-	App(int width, int height, sf::String title);
+  App(int width, int height, sf::String title);
 
-	void processEvents();
-	void processInput();
-	void render();
+  void processEvents();
+  void processInput();
+  void render();
 
-	void fixedUpdate();
+  void fixedUpdate();
 };
 
 #endif // __APPLICATION_H__
