@@ -17,6 +17,8 @@ struct Player
   int verticalVel;
 };
 
+void rotateVec(sf::Vector2f& vec, double angle);
+
 class App
 {
 private:
@@ -34,6 +36,7 @@ public:
 
   void processEvents();
   void processInput();
+  void doMovements();
   void render();
 };
 

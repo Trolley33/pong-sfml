@@ -4,6 +4,6 @@
 
 int main()
 {
-	App app(320, 320, "Title!");
-	return 0;
+  App app(640, 640, "Title!");
+  return 0;
 }
