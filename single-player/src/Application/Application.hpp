@@ -9,6 +9,7 @@ struct Ball
 {
   sf::CircleShape circleShape;
   sf::Vector2f vel;
+  float maxVel;
 };
 
 struct Player
@@ -18,6 +19,7 @@ struct Player
 };
 
 void rotateVec(sf::Vector2f& vec, double angle);
+void setMagnitude(sf::Vector2f& vec, float newMag);
 
 class App
 {

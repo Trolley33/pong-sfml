@@ -1,4 +1,5 @@
 #include "Application.hpp"
+#include "CollisionHandler/CollisionHandler.hpp"
 #include <math.h>
 
 #define PI 3.14159265
@@ -24,7 +25,8 @@ App::App(int width, int height, sf::String title)
   ball.circleShape.setFillColor(sf::Color::White);
   ball.circleShape.setOrigin(sf::Vector2f(ball.circleShape.getRadius(), ball.circleShape.getRadius()));
   ball.circleShape.setPosition(sf::Vector2f(width / 2, height / 2));
-  ball.vel = sf::Vector2f(5, 0);
+  ball.maxVel = 15;
+  ball.vel = sf::Vector2f(ball.maxVel, 0);
 
   // Init timer variables.
   frameDelta = 0;
@@ -100,10 +102,24 @@ void App::doMovements()
 
   ball.circleShape.move(ball.vel);
 
-  if (ball.circleShape.getPosition().x <= 0 || ball.circleShape.getPosition().x >= window.getSize().x)
+  if (ball.circleShape.getPosition().y - ball.circleShape.getRadius() <= 0 || ball.circleShape.getPosition().y + ball.circleShape.getRadius() >= window.getSize().y)
   {
-    // rotateVec(ball.vel, 180.0);
-    ball.vel.x = ball.vel.x * -1;
+    ball.vel.y *= -1;
+  }
+
+  if (CollisionHandler::collides(ball.circleShape, player1.rectShape))
+  {
+    ball.vel.x *= -1;
+    ball.circleShape.move(ball.vel);
+    ball.vel.y += (player1.verticalVel / 50);
+    setMagnitude(ball.vel, ball.maxVel);
+  }
+  else if (CollisionHandler::collides(ball.circleShape, player2.rectShape))
+  {
+    ball.vel.x *= -1;
+    ball.circleShape.move(ball.vel);
+    ball.vel.y += (player2.verticalVel / 50);
+    setMagnitude(ball.vel, ball.maxVel);
   }
 }
 
@@ -117,4 +133,11 @@ void rotateVec(sf::Vector2f& vec, double angle)
 
   vec.x = x2;
   vec.y = y2;
+}
+
+void setMagnitude(sf::Vector2f& vec, float newMag)
+{
+  float mag = std::sqrt(std::pow(vec.x, 2) + std::pow(vec.y, 2));
+  vec.x = (vec.x / mag) * newMag;
+  vec.y = (vec.y / mag) * newMag;
 }
