@@ -21,7 +21,7 @@ App::App(int width, int height, sf::String title)
   player2.rectShape.setFillColor(sf::Color::White);
 
   // Create ball
-  ball.circleShape = sf::CircleShape(15.0f); // initial radius
+  ball.circleShape = sf::CircleShape(5.0f); // initial radius
   ball.circleShape.setFillColor(sf::Color::White);
   ball.circleShape.setOrigin(sf::Vector2f(ball.circleShape.getRadius(), ball.circleShape.getRadius()));
   ball.circleShape.setPosition(sf::Vector2f(width / 2, height / 2));
@@ -97,29 +97,75 @@ void App::processInput()
 
 void App::doMovements()
 {
+  std::cout << "\r" << ball.vel.x << "," << ball.vel.y;
+
   player1.rectShape.move(0, frameDelta * player1.verticalVel);
   player2.rectShape.move(0, frameDelta * player2.verticalVel);
 
+  sf::Vector2f originalPosition = ball.circleShape.getPosition();
+
   ball.circleShape.move(ball.vel);
 
+  // Check for edge of screen collisions.
   if (ball.circleShape.getPosition().y - ball.circleShape.getRadius() <= 0 || ball.circleShape.getPosition().y + ball.circleShape.getRadius() >= window.getSize().y)
   {
     ball.vel.y *= -1;
+    // If we move off screen, in this frame, move back to where we were after adjusting velocity.
+    ball.circleShape.setPosition(originalPosition);
+    return;
+  }
+
+  if (ball.circleShape.getPosition().x - ball.circleShape.getRadius() <= 0 || ball.circleShape.getPosition().x + ball.circleShape.getRadius() >= window.getSize().x)
+  {
+    // If we hit the x walls, reset ball to center.
+    ball.circleShape.setPosition(window.getSize().x / 2, window.getSize().y / 2);
+    ball.vel.x = ball.maxVel;
+    ball.vel.y = 0;
+
+    player1.rectShape.setPosition(50, window.getSize().y / 2);
+    player2.rectShape.setPosition(window.getSize().x - player2.rectShape.getSize().x - 50, window.getSize().y / 2);
+
+    return;
   }
 
   if (CollisionHandler::collides(ball.circleShape, player1.rectShape))
   {
     ball.vel.x *= -1;
-    ball.circleShape.move(ball.vel);
-    ball.vel.y += (player1.verticalVel / 50);
-    setMagnitude(ball.vel, ball.maxVel);
+    ball.circleShape.setPosition(player1.rectShape.getPosition().x + ball.circleShape.getRadius() + player1.rectShape.getSize().x, ball.circleShape.getPosition().y);
+    if (player1.verticalVel != 0)
+    {
+      ball.vel.y = ball.vel.y + (player1.verticalVel * 0.05);
+      if (ball.vel.y > (ball.maxVel / 3))
+      {
+        ball.vel.y = (ball.maxVel / 3);
+      }
+      else if (ball.vel.y < -(ball.maxVel / 3))
+      {
+        ball.vel.y = -(ball.maxVel / 3);
+      }
+      setMagnitude(ball.vel, ball.maxVel);
+    }
+    return;
   }
-  else if (CollisionHandler::collides(ball.circleShape, player2.rectShape))
+
+  if (CollisionHandler::collides(ball.circleShape, player2.rectShape))
   {
     ball.vel.x *= -1;
-    ball.circleShape.move(ball.vel);
-    ball.vel.y += (player2.verticalVel / 50);
-    setMagnitude(ball.vel, ball.maxVel);
+    ball.circleShape.setPosition(player2.rectShape.getPosition().x - ball.circleShape.getRadius(), ball.circleShape.getPosition().y);
+    if (player2.verticalVel != 0)
+    {
+      ball.vel.y = ball.vel.y + (player2.verticalVel * 0.05);
+      if (ball.vel.y > (ball.maxVel / 3))
+      {
+        ball.vel.y = (ball.maxVel / 3);
+      }
+      else if (ball.vel.y < -(ball.maxVel / 3))
+      {
+        ball.vel.y = -(ball.maxVel / 3);
+      }
+      setMagnitude(ball.vel, ball.maxVel);
+    }
+    return;
   }
 }
 
