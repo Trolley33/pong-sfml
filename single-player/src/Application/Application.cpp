@@ -71,8 +71,10 @@ void App::processEvents()
 
 void App::processInput()
 {
+  // * Number of pixels the paddles move a second.
   const int pixelsPerSeconds = 325;
 
+  // * Set to 0 by default, only move if button is held.
   player1.verticalVel = 0;
   player2.verticalVel = 0;
 
@@ -106,18 +108,18 @@ void App::doMovements()
 
   ball.circleShape.move(ball.vel);
 
-  // Check for edge of screen collisions.
+  // * Check for edge of screen collisions.
   if (ball.circleShape.getPosition().y - ball.circleShape.getRadius() <= 0 || ball.circleShape.getPosition().y + ball.circleShape.getRadius() >= window.getSize().y)
   {
     ball.vel.y *= -1;
-    // If we move off screen, in this frame, move back to where we were after adjusting velocity.
+    // * If we move off screen, in this frame, move back to where we were after adjusting velocity.
     ball.circleShape.setPosition(originalPosition);
     return;
   }
 
   if (ball.circleShape.getPosition().x - ball.circleShape.getRadius() <= 0 || ball.circleShape.getPosition().x + ball.circleShape.getRadius() >= window.getSize().x)
   {
-    // If we hit the x walls, reset ball to center.
+    // * If we hit the x walls, reset ball to center.
     ball.circleShape.setPosition(window.getSize().x / 2, window.getSize().y / 2);
     ball.vel.x = ball.maxVel;
     ball.vel.y = 0;
@@ -128,10 +130,14 @@ void App::doMovements()
     return;
   }
 
+  // * If our ball is colliding with the left-most panel.
   if (CollisionHandler::collides(ball.circleShape, player1.rectShape))
   {
+    // * Reverse the ball's motion, move the ball to the boundary between the objects.
     ball.vel.x *= -1;
     ball.circleShape.setPosition(player1.rectShape.getPosition().x + ball.circleShape.getRadius() + player1.rectShape.getSize().x, ball.circleShape.getPosition().y);
+
+    // * If our player is moving, add some of the player's vertical velocity to the ball.
     if (player1.verticalVel != 0)
     {
       ball.vel.y = ball.vel.y + (player1.verticalVel * 0.05);
@@ -143,11 +149,13 @@ void App::doMovements()
       {
         ball.vel.y = -(ball.maxVel / 3);
       }
+      // * Clamp the ball's total velocity (magnitude of vector) to the max velocity.
       setMagnitude(ball.vel, ball.maxVel);
     }
     return;
   }
 
+  // * As above but for the right paddle.
   if (CollisionHandler::collides(ball.circleShape, player2.rectShape))
   {
     ball.vel.x *= -1;
@@ -181,6 +189,7 @@ void rotateVec(sf::Vector2f& vec, double angle)
   vec.y = y2;
 }
 
+// * Takes a vector by reference and scales it's directions to have desired magnitude.
 void setMagnitude(sf::Vector2f& vec, float newMag)
 {
   float mag = std::sqrt(std::pow(vec.x, 2) + std::pow(vec.y, 2));
