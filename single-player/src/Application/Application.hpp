@@ -20,6 +20,8 @@ struct Player
 
 void rotateVec(sf::Vector2f& vec, double angle);
 void setMagnitude(sf::Vector2f& vec, float newMag);
+void clampValue(float& val, float min, float max);
+float clampValue(float val, float min, float max);
 
 class App
 {
@@ -34,7 +36,7 @@ private:
   Ball ball;
 
 public:
-  App(int width, int height, sf::String title);
+  App(sf::String title);
 
   void processEvents();
   void processInput();

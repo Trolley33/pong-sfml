@@ -4,7 +4,10 @@
 
 #define PI 3.14159265
 
-App::App(int width, int height, sf::String title)
+const int width = 640;
+const int height = 640;
+
+App::App(sf::String title)
 {
   // Create render window.
   window.create(sf::VideoMode(width, height), title);
@@ -14,8 +17,8 @@ App::App(int width, int height, sf::String title)
   player1.rectShape = sf::RectangleShape(sf::Vector2f(20, 60));
   player2.rectShape = sf::RectangleShape(sf::Vector2f(20, 60));
 
-  player1.rectShape.setPosition(sf::Vector2f(50, height / 2));              // create at top left
-  player2.rectShape.setPosition(sf::Vector2f(width - 50 - 20, height / 2)); // create at top right
+  player1.rectShape.setPosition(sf::Vector2f(50, (height / 2) - (player1.rectShape.getSize().y / 2)));
+  player2.rectShape.setPosition(sf::Vector2f(width - 50 - 20, (height / 2) - (player2.rectShape.getSize().y / 2)));
 
   player1.rectShape.setFillColor(sf::Color::White);
   player2.rectShape.setFillColor(sf::Color::White);
@@ -104,6 +107,9 @@ void App::doMovements()
   player1.rectShape.move(0, frameDelta * player1.verticalVel);
   player2.rectShape.move(0, frameDelta * player2.verticalVel);
 
+  player1.rectShape.setPosition(player1.rectShape.getPosition().x, clampValue(player1.rectShape.getPosition().y, 0, height - player1.rectShape.getSize().y));
+  player2.rectShape.setPosition(player2.rectShape.getPosition().x, clampValue(player2.rectShape.getPosition().y, 0, height - player2.rectShape.getSize().y));
+
   sf::Vector2f originalPosition = ball.circleShape.getPosition();
 
   ball.circleShape.move(ball.vel);
@@ -124,8 +130,8 @@ void App::doMovements()
     ball.vel.x = ball.maxVel;
     ball.vel.y = 0;
 
-    player1.rectShape.setPosition(50, window.getSize().y / 2);
-    player2.rectShape.setPosition(window.getSize().x - player2.rectShape.getSize().x - 50, window.getSize().y / 2);
+    player1.rectShape.setPosition(sf::Vector2f(50, (height / 2) - (player1.rectShape.getSize().y / 2)));
+    player2.rectShape.setPosition(sf::Vector2f(width - 50 - 20, (height / 2) - (player2.rectShape.getSize().y / 2)));
 
     return;
   }
@@ -195,4 +201,22 @@ void setMagnitude(sf::Vector2f& vec, float newMag)
   float mag = std::sqrt(std::pow(vec.x, 2) + std::pow(vec.y, 2));
   vec.x = (vec.x / mag) * newMag;
   vec.y = (vec.y / mag) * newMag;
+}
+
+void clampValue(float& val, float min, float max)
+{
+  if (val > max)
+    val = max;
+  else if (val < min)
+    val = min;
+}
+
+float clampValue(float val, float min, float max)
+{
+  if (val > max)
+    return max;
+  else if (val < min)
+    return min;
+
+  return val;
 }

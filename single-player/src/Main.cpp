@@ -4,6 +4,6 @@
 
 int main()
 {
-  App app(640, 640, "Title!");
+  App app("Pong!");
   return 0;
 }
