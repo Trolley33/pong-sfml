@@ -35,6 +35,11 @@ private:
 
   Ball ball;
 
+  sf::Font font;
+  sf::Text text;
+
+  int scores[2];
+
 public:
   App(sf::String title);
 

@@ -11,7 +11,21 @@ App::App(sf::String title)
 {
   // Create render window.
   window.create(sf::VideoMode(width, height), title);
-  window.setFramerateLimit(30);
+  window.setFramerateLimit(60);
+
+  scores[0] = 0;
+  scores[1] = 0;
+
+  // * Load font from file.
+  if (!font.loadFromFile("assets/fonts/trebuc.ttf"))
+  {
+    // TODO: properly handle error.
+  }
+
+  text.setFont(font);
+  text.setCharacterSize(42);
+  text.setStyle(sf::Text::Style::Bold);
+  text.setFillColor(sf::Color::White);
 
   // Create Players
   player1.rectShape = sf::RectangleShape(sf::Vector2f(20, 60));
@@ -56,6 +70,10 @@ void App::render()
   window.draw(player2.rectShape);
 
   window.draw(ball.circleShape);
+  // TODO: fix this.
+  text.setString(std::to_string(scores[0]) + " - " + std::to_string(scores[1]));
+  text.setPosition((window.getSize().x / 2) - (text.getLocalBounds().width / 2), 10);
+  window.draw(text);
 
   window.display();
 }
@@ -125,6 +143,16 @@ void App::doMovements()
 
   if (ball.circleShape.getPosition().x - ball.circleShape.getRadius() <= 0 || ball.circleShape.getPosition().x + ball.circleShape.getRadius() >= window.getSize().x)
   {
+    // * Left wall (quicker to check against width / 2 than to get the radius and subtract again).
+    if (ball.circleShape.getPosition().x < (width / 2))
+    {
+      scores[1] += 1;
+    }
+    else
+    {
+      scores[0] += 1;
+    }
+
     // * If we hit the x walls, reset ball to center.
     ball.circleShape.setPosition(window.getSize().x / 2, window.getSize().y / 2);
     ball.vel.x = ball.maxVel;
