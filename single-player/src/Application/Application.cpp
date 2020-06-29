@@ -42,7 +42,7 @@ App::App(sf::String title)
   ball.circleShape.setFillColor(sf::Color::White);
   ball.circleShape.setOrigin(sf::Vector2f(ball.circleShape.getRadius(), ball.circleShape.getRadius()));
   ball.circleShape.setPosition(sf::Vector2f(width / 2, height / 2));
-  ball.maxVel = 15;
+  ball.maxVel = 700;
   ball.vel = sf::Vector2f(ball.maxVel, 0);
 
   // Init timer variables.
@@ -120,17 +120,19 @@ void App::processInput()
 
 void App::doMovements()
 {
-  std::cout << "\r" << ball.vel.x << "," << ball.vel.y;
-
+  // * Move each player based on their velocity and frame time difference.
   player1.rectShape.move(0, frameDelta * player1.verticalVel);
   player2.rectShape.move(0, frameDelta * player2.verticalVel);
 
+  // ! BOT MOVEMENT, DELETE!
+  player2.rectShape.setPosition(player2.rectShape.getPosition().x, ball.circleShape.getPosition().y - (player2.rectShape.getSize().y / 2));
+
+  // * Clamp the movement of players between window height.
   player1.rectShape.setPosition(player1.rectShape.getPosition().x, clampValue(player1.rectShape.getPosition().y, 0, height - player1.rectShape.getSize().y));
   player2.rectShape.setPosition(player2.rectShape.getPosition().x, clampValue(player2.rectShape.getPosition().y, 0, height - player2.rectShape.getSize().y));
 
   sf::Vector2f originalPosition = ball.circleShape.getPosition();
-
-  ball.circleShape.move(ball.vel);
+  ball.circleShape.move(frameDelta * ball.vel);
 
   // * Check for edge of screen collisions.
   if (ball.circleShape.getPosition().y - ball.circleShape.getRadius() <= 0 || ball.circleShape.getPosition().y + ball.circleShape.getRadius() >= window.getSize().y)
@@ -164,7 +166,7 @@ void App::doMovements()
     return;
   }
 
-  // * If our ball is colliding with the left-most panel.
+  // * If our ball is colliding with the left-most paddle.
   if (CollisionHandler::collides(ball.circleShape, player1.rectShape))
   {
     // * Reverse the ball's motion, move the ball to the boundary between the objects.
@@ -174,14 +176,14 @@ void App::doMovements()
     // * If our player is moving, add some of the player's vertical velocity to the ball.
     if (player1.verticalVel != 0)
     {
-      ball.vel.y = ball.vel.y + (player1.verticalVel * 0.05);
-      if (ball.vel.y > (ball.maxVel / 3))
+      ball.vel.y = ball.vel.y + (player1.verticalVel * 0.9);
+      if (ball.vel.y > (ball.maxVel / 2))
       {
-        ball.vel.y = (ball.maxVel / 3);
+        ball.vel.y = (ball.maxVel / 2);
       }
-      else if (ball.vel.y < -(ball.maxVel / 3))
+      else if (ball.vel.y < -(ball.maxVel / 2))
       {
-        ball.vel.y = -(ball.maxVel / 3);
+        ball.vel.y = -(ball.maxVel / 2);
       }
       // * Clamp the ball's total velocity (magnitude of vector) to the max velocity.
       setMagnitude(ball.vel, ball.maxVel);
@@ -196,14 +198,14 @@ void App::doMovements()
     ball.circleShape.setPosition(player2.rectShape.getPosition().x - ball.circleShape.getRadius(), ball.circleShape.getPosition().y);
     if (player2.verticalVel != 0)
     {
-      ball.vel.y = ball.vel.y + (player2.verticalVel * 0.05);
-      if (ball.vel.y > (ball.maxVel / 3))
+      ball.vel.y = ball.vel.y + (player2.verticalVel * 0.9);
+      if (ball.vel.y > (ball.maxVel / 2))
       {
-        ball.vel.y = (ball.maxVel / 3);
+        ball.vel.y = (ball.maxVel / 2);
       }
-      else if (ball.vel.y < -(ball.maxVel / 3))
+      else if (ball.vel.y < -(ball.maxVel / 2))
       {
-        ball.vel.y = -(ball.maxVel / 3);
+        ball.vel.y = -(ball.maxVel / 2);
       }
       setMagnitude(ball.vel, ball.maxVel);
     }
