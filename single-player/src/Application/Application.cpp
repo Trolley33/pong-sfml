@@ -13,8 +13,26 @@ App::App(sf::String title)
   window.create(sf::VideoMode(width, height), title);
   window.setFramerateLimit(60);
 
-  scores[0] = 0;
-  scores[1] = 0;
+  initVariables();
+
+  sf::Clock clock;
+
+  while (window.isOpen())
+  {
+    frameDelta = clock.restart().asSeconds();
+
+    processEvents();
+    processInput();
+    doMovements();
+
+    render();
+  }
+}
+
+void App::initVariables()
+{
+  player1.score = 0;
+  player2.score = 0;
 
   // * Load font from file.
   if (!font.loadFromFile("assets/fonts/trebuc.ttf"))
@@ -47,19 +65,6 @@ App::App(sf::String title)
 
   // Init timer variables.
   frameDelta = 0;
-
-  sf::Clock clock;
-
-  while (window.isOpen())
-  {
-    frameDelta = clock.restart().asSeconds();
-
-    processEvents();
-    processInput();
-    doMovements();
-
-    render();
-  }
 }
 
 void App::render()
@@ -70,9 +75,7 @@ void App::render()
   window.draw(player2.rectShape);
 
   window.draw(ball.circleShape);
-  // TODO: fix this.
-  text.setString(std::to_string(scores[0]) + " - " + std::to_string(scores[1]));
-  text.setPosition((window.getSize().x / 2) - (text.getLocalBounds().width / 2), 10);
+
   window.draw(text);
 
   window.display();
@@ -148,12 +151,16 @@ void App::doMovements()
     // * Left wall (quicker to check against width / 2 than to get the radius and subtract again).
     if (ball.circleShape.getPosition().x < (width / 2))
     {
-      scores[1] += 1;
+      player1.score += 1;
     }
     else
     {
-      scores[0] += 1;
+      player2.score += 1;
     }
+
+    // * Set text value and position based on text width.
+    text.setString(std::to_string(player1.score) + " - " + std::to_string(player2.score));
+    text.setPosition((window.getSize().x / 2) - (text.getLocalBounds().width / 2), 10);
 
     // * If we hit the x walls, reset ball to center.
     ball.circleShape.setPosition(window.getSize().x / 2, window.getSize().y / 2);

@@ -16,6 +16,7 @@ struct Player
 {
   sf::RectangleShape rectShape;
   int verticalVel;
+  int score;
 };
 
 void rotateVec(sf::Vector2f& vec, double angle);
@@ -38,10 +39,10 @@ private:
   sf::Font font;
   sf::Text text;
 
-  int scores[2];
-
 public:
   App(sf::String title);
+
+  void initVariables();
 
   void processEvents();
   void processInput();
