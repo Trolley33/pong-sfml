@@ -4400,7 +4400,6 @@ namespace Generators {
 
 template <typename Float>
 class RandomFloatingGenerator final : public IGenerator<Float> {
-    // FIXME: What is the right seed?
     std::minstd_rand m_rand;
     std::uniform_real_distribution<Float> m_dist;
     Float m_current_number;
@@ -4443,7 +4442,6 @@ public:
     }
 };
 
-// TODO: Ideally this would be also constrained against the various char types,
 //       but I don't expect users to run into that in practice.
 template <typename T>
 typename std::enable_if<std::is_integral<T>::value && !std::is_same<T, bool>::value,
@@ -6217,7 +6215,6 @@ namespace Catch {
             // thanks @milleniumbug
             *reinterpret_cast<char volatile*>(p) = *reinterpret_cast<char const volatile*>(p);
         }
-        // TODO equivalent keep_memory()
 #pragma optimize("", on)
 
         namespace Detail {
@@ -16337,7 +16334,6 @@ namespace Catch {
 
     void XmlReporter::testGroupEnded( TestGroupStats const& testGroupStats ) {
         StreamingReporterBase::testGroupEnded( testGroupStats );
-        // TODO: Check testGroupStats.aborting and act accordingly.
         m_xml.scopedElement( "OverallResults" )
             .writeAttribute( "successes", testGroupStats.totals.assertions.passed )
             .writeAttribute( "failures", testGroupStats.totals.assertions.failed )
