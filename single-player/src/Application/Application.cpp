@@ -131,7 +131,7 @@ void App::doMovements()
   player1.rectShape.move(0, frameDelta * player1.verticalVel);
   player2.rectShape.move(0, frameDelta * player2.verticalVel);
 
-  // ! BOT MOVEMENT, DELETE!
+  // TODO remove bot movement!
   player2.rectShape.setPosition(player2.rectShape.getPosition().x, ball.circleShape.getPosition().y - (player2.rectShape.getSize().y / 2));
 
   // * Clamp the movement of players between window height.
