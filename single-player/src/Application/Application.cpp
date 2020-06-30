@@ -45,6 +45,10 @@ void App::initVariables()
   text.setStyle(sf::Text::Style::Bold);
   text.setFillColor(sf::Color::White);
 
+  // * Set text value and position based on text width.
+  text.setString(std::to_string(player1.score) + " - " + std::to_string(player2.score));
+  text.setPosition((window.getSize().x / 2) - (text.getLocalBounds().width / 2), 10);
+
   // Create Players
   player1.rectShape = sf::RectangleShape(sf::Vector2f(20, 60));
   player2.rectShape = sf::RectangleShape(sf::Vector2f(20, 60));
